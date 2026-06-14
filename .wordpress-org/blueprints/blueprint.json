@@ -1,0 +1,16 @@
+{
+  "landingPage": "/wp-admin/admin.php?page=azhar-faq-for-elementor",
+  "preferredVersions": {
+    "wp": "latest",
+    "php": "8.0"
+  },
+  "plugins": [
+    "azhar-faq-for-elementor"
+  ],
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin"
+    }
+  ]
+}
