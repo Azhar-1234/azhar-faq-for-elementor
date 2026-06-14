@@ -1,0 +1,114 @@
+.dcc-bazar-faq-widget {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* --- Container Spacing --- */
+.dcc-faq-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Creates the space between the FAQ items */
+}
+
+/* --- Item Styling (Rounded corners & Borders) --- */
+.dcc-faq-item {
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    border-radius: 12px; /* Gives the smooth pill shape */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.dcc-faq-item:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.dcc-faq-item.active {
+    border-color: #e6007e;
+    box-shadow: 0 4px 20px rgba(230, 0, 126, 0.1);
+}
+
+/* --- Header Alignment (The Fix) --- */
+.dcc-question-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: transparent;
+}
+
+/* Groups the Number and the Text together */
+.dcc-question-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+/* --- Typography & Elements --- */
+.dcc-question {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #222;
+}
+
+.dcc-number {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    flex-shrink: 0;
+}
+
+/* --- Toggle Icon --- */
+.dcc-bazar-faq-widget .dcc-toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    background-color: #f3f4f6 !important;
+    border-radius: 50%;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 20px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 16px;
+    color: #999;
+}
+
+.dcc-bazar-faq-widget .dcc-faq-item.active .dcc-toggle-icon {
+    background-color: #e6007e !important;
+    color: white !important;
+}
+
+/* --- Answer Visibility --- */
+.dcc-bazar-faq-widget .dcc-answer {
+    display: none;
+    padding: 0 24px 24px 72px; /* Padded left to align perfectly under the title text */
+    color: #666;
+    animation: fadeIn 0.3s ease;
+}
+
+.dcc-bazar-faq-widget .dcc-faq-item.active .dcc-answer {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
