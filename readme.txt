@@ -12,7 +12,7 @@ A simple and awesome FAQ accordion widget for Elementor.
 
 
 == Description ==
-A simple and awesome FAQ accordion widget for Elementor.
+A simple, lightweight FAQ accordion widget for Elementor. Easy to use and fully customizable via Elementor controls — add, reorder, and style FAQ items. Responsive and accessibility-minded, it supports keyboard navigation and multiple open items.
 
 == Installation ==
 1. Upload the `azhar-faq-for-elementor` folder to the `/wp-content/plugins/` directory.
