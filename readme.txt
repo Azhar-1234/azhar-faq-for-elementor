@@ -10,6 +10,7 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 A simple and awesome FAQ accordion widget for Elementor.
 
+
 == Description ==
 A simple and awesome FAQ accordion widget for Elementor.
 
