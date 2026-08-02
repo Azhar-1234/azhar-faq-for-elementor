@@ -1,0 +1,103 @@
+.azhafafo-faq-panel .azhafafo-faq-intro {
+    padding: 12px 12px 0;
+    margin: 0 0 8px;
+    color: #646970;
+}
+
+.azhafafo-faq-panel .azhafafo-faq-rows,
+.azhafafo-faq-panel .azhafafo-faq-actions,
+.azhafafo-faq-panel .azhafafo-faq-empty {
+    padding: 0 12px;
+}
+
+.azhafafo-faq-panel .azhafafo-faq-empty {
+    color: #646970;
+    font-style: italic;
+}
+
+.azhafafo-faq-row {
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    background: #fff;
+    margin-bottom: 10px;
+}
+
+.azhafafo-faq-row-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: #f6f7f7;
+    border-radius: 4px 4px 0 0;
+}
+
+.azhafafo-faq-handle {
+    cursor: move;
+    color: #8c8f94;
+}
+
+.azhafafo-faq-row-title {
+    flex: 1;
+    cursor: pointer;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.azhafafo-faq-row-head .button-link {
+    color: #50575e;
+    line-height: 1;
+}
+
+.azhafafo-faq-row-head .azhafafo-remove-faq:hover {
+    color: #d63638;
+}
+
+.azhafafo-faq-row .azhafafo-faq-row-body {
+    display: none;
+    padding: 10px 10px 2px;
+}
+
+.azhafafo-faq-row.is-open .azhafafo-faq-row-body {
+    display: block;
+}
+
+.azhafafo-faq-row.is-open .azhafafo-toggle-faq .dashicons {
+    transform: rotate(180deg);
+}
+
+/* WooCommerce panels float their labels; keep our fields full width instead. */
+.azhafafo-faq-panel .azhafafo-faq-row-body .form-field {
+    padding: 0 0 12px;
+    margin: 0;
+}
+
+.azhafafo-faq-panel .azhafafo-faq-row-body .form-field label {
+    display: block;
+    float: none;
+    width: auto;
+    margin: 0 0 4px;
+    font-weight: 600;
+}
+
+.azhafafo-faq-panel .azhafafo-faq-row-body .form-field input[type="text"],
+.azhafafo-faq-panel .azhafafo-faq-row-body .form-field textarea {
+    width: 100%;
+    float: none;
+    margin: 0;
+}
+
+.azhafafo-faq-panel .azhafafo-faq-row-body .form-field .description {
+    display: block;
+    margin: 4px 0 0;
+    padding: 0;
+    color: #646970;
+}
+
+.azhafafo-faq-placeholder {
+    border: 1px dashed #c3c4c7;
+    border-radius: 4px;
+    background: #f0f0f1;
+    margin-bottom: 10px;
+}
