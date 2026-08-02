@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       Azhar FAQ for Elementor
- * Description:       A simple and awesome FAQ accordion widget for Elementor.
- * Version:           1.0.0
+ * Description:       FAQ accordion widget for Elementor, with a separate FAQ for every WooCommerce product.
+ * Version:           1.1.0
  * Author:            Azhar Uddin
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -24,7 +24,7 @@ final class AZHAFAFO_Awesome_Elementor_FAQ {
      *
      * @var string
      */
-    const VERSION = '1.0.0';
+    const VERSION = '1.1.0';
 
     /**
      * The single instance of the class
@@ -50,8 +50,35 @@ final class AZHAFAFO_Awesome_Elementor_FAQ {
      */
     public function __construct() {
         $this->define_constants();
+        $this->includes();
         add_action( 'init', [ $this, 'init' ] );
+        add_action( 'plugins_loaded', [ $this, 'init_product_faq' ] );
         add_action( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $this, 'plugin_action_links' ] );
+    }
+
+    /**
+     * Load shared files
+     */
+    private function includes() {
+        require_once AZHAFAFO_PLUGIN_PATH . '/includes/functions.php';
+
+        if ( is_admin() ) {
+            require_once AZHAFAFO_PLUGIN_PATH . '/includes/class-elementor-installer.php';
+            new AZHAFAFO_Elementor_Installer();
+        }
+    }
+
+    /**
+     * Register the per product FAQ box. WooCommerce only, and independent of
+     * Elementor so the saved data survives even if Elementor is disabled.
+     */
+    public function init_product_faq() {
+        if ( ! class_exists( 'WooCommerce' ) ) {
+            return;
+        }
+
+        require_once AZHAFAFO_PLUGIN_PATH . '/includes/class-product-faq-metabox.php';
+        new AZHAFAFO_Product_FAQ_Metabox();
     }
 
     /**
@@ -67,9 +94,13 @@ final class AZHAFAFO_Awesome_Elementor_FAQ {
      * Initialize the plugin
      */
     public function init() {
-        // Check if Elementor is loaded
+        // Available with or without Elementor
+        add_action( 'wp_enqueue_scripts', [ $this, 'register_frontend_assets' ] );
+        add_shortcode( 'azhar_product_faq', [ $this, 'product_faq_shortcode' ] );
+
+        // Everything below needs Elementor. The install prompt is handled by
+        // AZHAFAFO_Elementor_Installer, the product FAQ box keeps working.
         if ( ! did_action( 'elementor/loaded' ) ) {
-            add_action( 'admin_notices', [ $this, 'admin_notice_missing_elementor' ] );
             return;
         }
 
@@ -81,35 +112,17 @@ final class AZHAFAFO_Awesome_Elementor_FAQ {
     }
 
     /**
-     * Admin notice for missing Elementor
-     */
-    public function admin_notice_missing_elementor() {
-        $elementor_link = esc_url( admin_url( 'plugin-install.php?s=elementor&tab=search&type=term' ) );
-        $message = sprintf(
-            /* translators: %1$s: Plugin name, %2$s: Elementor, %3$s: install URL */
-            __( '"%1$s" requires "%2$s" to be installed and activated. <a href="%3$s">Install Elementor</a>.', 'azhar-faq-for-elementor' ),
-            '<strong>' . esc_html__( 'Azhar FAQ for Elementor', 'azhar-faq-for-elementor' ) . '</strong>',
-            '<strong>' . esc_html__( 'Elementor', 'azhar-faq-for-elementor' ) . '</strong>',
-            $elementor_link
-        );
-
-        $allowed = [
-            'a'      => [ 'href' => true ],
-            'strong' => [],
-        ];
-
-        printf(
-            '<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
-            wp_kses( $message, $allowed )
-        );
-    }
-
-    /**
      * Add plugin action links
      */
     public function plugin_action_links( $links ) {
-    $settings_link = '<a href="admin.php?page=elementor-getting-started">' . esc_html__( 'Settings', 'azhar-faq-for-elementor' ) . '</a>';
-        array_unshift( $links, $settings_link );
+        if ( class_exists( 'AZHAFAFO_Elementor_Installer' ) && ! AZHAFAFO_Elementor_Installer::is_active() ) {
+            $link = '<a href="' . esc_url( admin_url( 'plugins.php' ) ) . '">' . esc_html__( 'Install Elementor', 'azhar-faq-for-elementor' ) . '</a>';
+        } else {
+            $link = '<a href="' . esc_url( admin_url( 'admin.php?page=elementor-getting-started' ) ) . '">' . esc_html__( 'Settings', 'azhar-faq-for-elementor' ) . '</a>';
+        }
+
+        array_unshift( $links, $link );
+
         return $links;
     }
 
@@ -151,6 +164,55 @@ final class AZHAFAFO_Awesome_Elementor_FAQ {
      */
     public function enqueue_scripts() {
     wp_enqueue_script( 'azhafafo-faq-accordion' );
+    }
+
+    /**
+     * Register the frontend assets so the shortcode works without Elementor
+     */
+    public function register_frontend_assets() {
+        wp_register_style(
+            'azhafafo-faq-style',
+            AZHAFAFO_PLUGIN_URL . '/assets/css/style.css',
+            [],
+            self::VERSION
+        );
+
+        $this->register_scripts();
+    }
+
+    /**
+     * Shortcode: [azhar_product_faq]
+     *
+     * Renders the FAQ saved on a product. Outputs nothing when the product has
+     * no FAQ of its own.
+     */
+    public function product_faq_shortcode( $atts ) {
+        $atts = shortcode_atts(
+            [
+                'id'       => 0,
+                'title'    => '',
+                'subtitle' => '',
+            ],
+            $atts,
+            'azhar_product_faq'
+        );
+
+        $faqs = azhafafo_get_product_faqs( $atts['id'] );
+
+        if ( empty( $faqs ) ) {
+            return '';
+        }
+
+        wp_enqueue_style( 'azhafafo-faq-style' );
+        wp_enqueue_script( 'azhafafo-faq-accordion' );
+
+        return azhafafo_get_faq_html(
+            $faqs,
+            [
+                'main_title' => $atts['title'],
+                'subtitle'   => $atts['subtitle'],
+            ]
+        );
     }
 }
 

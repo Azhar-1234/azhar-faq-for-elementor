@@ -65,6 +65,21 @@ class AZHAFAFO_Elementor_FAQ_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'faq_source',
+            [
+                'label' => esc_html__( 'FAQ Source', 'azhar-faq-for-elementor' ),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'auto',
+                'options' => [
+                    'auto'    => esc_html__( 'Product FAQ, fallback to items below', 'azhar-faq-for-elementor' ),
+                    'product' => esc_html__( 'Product FAQ only', 'azhar-faq-for-elementor' ),
+                    'manual'  => esc_html__( 'Items below only', 'azhar-faq-for-elementor' ),
+                ],
+                'description' => esc_html__( 'Product FAQ comes from the FAQ tab of the WooCommerce product being viewed.', 'azhar-faq-for-elementor' ),
+            ]
+        );
+
         $repeater = new \Elementor\Repeater();
 
         $repeater->add_control(
@@ -114,6 +129,9 @@ class AZHAFAFO_Elementor_FAQ_Widget extends \Elementor\Widget_Base {
                     ],
                 ],
                 'title_field' => '{{{ number }}}. {{{ question }}}',
+                'condition' => [
+                    'faq_source!' => 'product',
+                ],
             ]
         );
 
@@ -290,43 +308,34 @@ class AZHAFAFO_Elementor_FAQ_Widget extends \Elementor\Widget_Base {
 
     protected function render() {
         $settings = $this->get_settings_for_display();
-        ?>
-        <div class="dcc-bazar-faq-widget">
-            <div class="dcc-faq-header" style="text-align: center; margin-bottom: 40px;">
-                <h2 class="dcc-faq-title" style="font-size: 2.25rem; font-weight: 700; margin-bottom: 12px;">
-                    <?php echo esc_html( $settings['main_title'] ); ?>
-                </h2>
-                <p class="dcc-faq-subtitle" style="font-size: 1.125rem;">
-                    <?php echo esc_html( $settings['subtitle'] ); ?>
-                </p>
-            </div>
+        $source   = ! empty( $settings['faq_source'] ) ? $settings['faq_source'] : 'auto';
 
-            <div class="dcc-faq-accordion">
-                <?php foreach ( $settings['faq_items'] as $index => $item ) : 
-                    $item_count = $index + 1;
-                ?>
-                    <div class="dcc-faq-item" data-index="<?php echo esc_attr( $item_count ); ?>">
-                        <div class="dcc-question-header">
-                            
-                            <div class="dcc-question-left">
-                                <span class="dcc-number">
-                                    <?php echo esc_html( $item['number'] ); ?>
-                                </span>
-                                <h3 class="dcc-question">
-                                    <?php echo esc_html( $item['question'] ); ?>
-                                </h3>
-                            </div>
+        $items = [];
 
-                            <span class="dcc-toggle-icon">+</span>
-                            
-                        </div>
-                        <div class="dcc-answer">
-                            <?php echo wp_kses_post( $item['answer'] ); ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-        <?php
+        // Product FAQ wins when the current product has one of its own.
+        if ( 'manual' !== $source ) {
+            $items = azhafafo_get_product_faqs();
+        }
+
+        // Otherwise fall back to the items configured on the widget.
+        if ( empty( $items ) && 'product' !== $source ) {
+            $items = azhafafo_normalize_faq_items( $settings['faq_items'] );
+        }
+
+        if ( empty( $items ) ) {
+            if ( \Elementor\Plugin::$instance->editor->is_edit_mode() ) {
+                echo '<p>' . esc_html__( 'No FAQ to show. Add FAQ items to this product, or switch the FAQ Source.', 'azhar-faq-for-elementor' ) . '</p>';
+            }
+            return;
+        }
+
+        // Escaped inside azhafafo_get_faq_html().
+        echo azhafafo_get_faq_html( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            $items,
+            [
+                'main_title' => $settings['main_title'],
+                'subtitle'   => $settings['subtitle'],
+            ]
+        );
     }
 }
