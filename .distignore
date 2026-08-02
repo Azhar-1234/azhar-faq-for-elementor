@@ -1,0 +1,34 @@
+# Files and folders below are kept out of the package that goes to
+# WordPress.org. Everything not listed here is shipped.
+
+# Version control and CI
+.git
+.github
+.gitattributes
+.gitignore
+.distignore
+
+# WordPress.org banners and icons live in SVN /assets, not in the plugin
+.wordpress-org
+
+# Editor and OS noise
+.editorconfig
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Dependency and build tooling
+node_modules
+composer.json
+composer.lock
+package.json
+package-lock.json
+
+# Developer docs and coding standards
+README.md
+phpcs.xml
+phpcs.xml.dist
+phpunit.xml
+phpunit.xml.dist
+tests
