@@ -10,7 +10,6 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 FAQ accordion widget for Elementor, with a separate FAQ for every WooCommerce product.
 
-
 == Description ==
 
 A lightweight FAQ accordion widget for Elementor — and, since 1.1.0, a way to give **every WooCommerce product its own set of questions**.
@@ -28,7 +27,6 @@ On the product page the widget looks up the product being viewed and shows that 
 * `[azhar_product_faq]` shortcode for themes and product templates that are not built with Elementor.
 * One click installs and activates Elementor if it is missing.
 * The product FAQ tab only needs WooCommerce. It keeps working, and your saved questions stay safe, even if Elementor is deactivated.
-
 
 == Installation ==
 
@@ -48,7 +46,6 @@ On the product page the widget looks up the product being viewed and shows that 
 
 * Built with Elementor: drop the **Azhar FAQ for Elementor** widget into your single product template. Its FAQ Source is set to product-first out of the box, so it picks up each product's questions automatically.
 * Not built with Elementor: put the `[azhar_product_faq]` shortcode wherever you want the FAQ to appear.
-
 
 == Frequently Asked Questions ==
 
@@ -76,7 +73,6 @@ In the product's own post meta (`_azhafafo_product_faqs`). No extra database tab
 
 Yes, the same HTML WordPress allows in a post. Line breaks are turned into paragraphs automatically.
 
-
 == Changelog ==
 
 = 1.1.0 =
@@ -90,8 +86,7 @@ Yes, the same HTML WordPress allows in a post. Line breaks are turned into parag
 = 1.0.0 =
 * Initial release
 
-
 == Upgrade Notice ==
 
 = 1.1.0 =
-Adds a per product FAQ tab to WooCommerce. Existing widgets keep working unchanged until you add FAQ items to a product.
+Adds a per product FAQ tab to WooCommerce. Existing widgets keep working unchanged until you add FAQ items to a product. https://plugins.svn.wordpress.org/azhar-faq-for-elementor/tags/1.1.0/readme.txt
